@@ -105,11 +105,32 @@ describe('Central de Atendimento ao Cliente TAT', () => {
    cy.get('[type="radio"]').should('be.checked')
   })
 
-  it.only('marca cada tipo de atendimento', () => {
+  it('marca cada tipo de atendimento', () => {
    cy.get('[type="radio"]').each(($radio) => {
       cy.wrap($radio).check()
       cy.wrap($radio).should('be.checked')
     })
   })
 
+  it('marca ambos checkboxes, depois desmarca o último', () => {
+    cy.get('#email-checkbox').check()
+    cy.get('#phone-checkbox').check()
+    cy.get('#email-checkbox').should('be.checked')
+    cy.get('#phone-checkbox').should('be.checked')
+
+    cy.get('#phone-checkbox').uncheck()
+    cy.get('#phone-checkbox').should('not.be.checked')
+  })
+
+  it.only('exibe mensagem de erro ao submeter o formulário com um arquivo que não é imagem', () => {
+    cy.get('#firstName').type('João')
+    cy.get('#lastName').type('Silva')
+    cy.get('#email').type('teste@gmail.com')
+    cy.get('#open-text-area').type('Mensagem de teste', { delay: 100 })
+    cy.get('#phone-checkbox').check()
+    cy.get('#phone-checkbox').should('be.checked')
+    cy.contains('button', 'Enviar').click()
+
+    cy.get('.error').should('be.visible')
+  })
 })
